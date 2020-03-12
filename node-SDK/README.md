@@ -1,12 +1,9 @@
-# fabcar-network
+# Node SDK for Digikis.
 
-fabcar-network is a version of the Hyperledger Fabric fabcar sample which has been changed to use a profile.
+Create the hfc keys for fabric. 
 
+using 
+$ node enrolladmin.js
+$ node registerUser.js
 
-## Manual Build and Run
-
-```
-git clone the repository and cd into the folder
-```
-
-# Voting-Node-SDK
+then run node app.js to start the application.
