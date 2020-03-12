@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-6 mx-auto">
+      <h2 class="text-center">Weather Forecast</h2>
+    <form class="form-signin" [formGroup]="weatherForecastForm" (submit)="submitWeatherInfo($event)">
+
+        <div class="form-group">
+          <label for="lbsInfo">lbs position</label>
+          <input type="text" id="lbsInfo" class="form-control"
+          placeholder="Enter lbs Info" required formControlName="lbsinfo">
+          <div class="error" *ngIf="weatherForecastForm.controls['lbsinfo'].hasError('required')
+              && weatherForecastForm.controls['lbsinfo'].touched">*lbsInfo is required</div>
+        </div>
+
+        <div class="form-group">
+            <label for="wifi">Wifi position</label>
+            <input type="text" id="wifi" class="form-control"
+            placeholder="Enter wifi position" required formControlName="wifi">
+            <div class="error" *ngIf="weatherForecastForm.controls['wifi'].hasError('required')
+                && weatherForecastForm.controls['wifi'].touched">*wifi position is required</div>
+          </div>
+
+          <div class="form-group">
+              <label for="longitude">Longitude</label>
+              <input type="text" id="longitude" class="form-control"
+              placeholder="Enter longitude" required formControlName="longitude">
+              <div class="error" *ngIf="weatherForecastForm.controls['longitude'].hasError('required')
+                  && weatherForecastForm.controls['longitude'].touched">*longitude is required</div>
+            </div>
+
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="text" id="latitude" class="form-control"
+                placeholder="Enter latitude" required formControlName="latitude">
+                <div class="error" *ngIf="weatherForecastForm.controls['latitude'].hasError('required')
+                    && weatherForecastForm.controls['latitude'].touched">*latitude is required</div>
+              </div>
+
+              <div class="form-group">
+                  <label for="mt">Coordinate system</label>
+                  <select id="mt" class="form-control" required formControlName="mt">
+                    <option value='0'>wgs84 coordinate system</option>
+                    <option value='1'>baidu coordinate system</option>
+                    <option value='2'>gaode coordinate syste m</option>
+                  </select>
+                  <div class="error" *ngIf="weatherForecastForm.controls['mt'].hasError('required')
+                      && weatherForecastForm.controls['mt'].touched">*Coordinate system is required</div>
+                </div>
+
+        <button class="btn btn-md btn-success btn-block text-uppercase" type="submit">Show Data</button>
+      </form>
+      </div>
+</div>
+
+<div class="row" *ngIf="showResult">
+  <div class="col-md-6 mx-auto">
+      <h4 class="text-center">Api Response</h4>
+      <div class="text-center" *ngIf="weatherInfo; else noDataFound">{{this.weatherInfo}}</div>
+      <ng-template #noDataFound>
+        <p class="text-center">No Data Found.</p>
+      </ng-template>
+  </div>
+</div>

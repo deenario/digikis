@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-4 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h4 class="card-title text-center">Sign In</h4>
+          <form class="form-signin" [formGroup]="loginForm" (submit)="login()">
+
+            <div class="form-group">
+              <label for="inputDeviceId">Device Id</label>
+              <input type="text" id="inputDeviceId" class="form-control" placeholder="Enter Device Id" required formControlName="deviceId">
+              <div class="error" *ngIf="loginForm.controls['deviceId'].hasError('required') 
+                  && loginForm.controls['deviceId'].touched">*Devide Id is required</div>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

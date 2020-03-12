@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <h2 class="text-center">Ecg Wave Form</h2>
+    <ng-container *ngIf="requestCompleted">
+      <img src="ecgImg" *ngIf="ecgImg; else noDataFound" style="width: 100%" />
+      <ng-template #noDataFound>
+        <h4 class="text-center">No Data Found.</h4>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

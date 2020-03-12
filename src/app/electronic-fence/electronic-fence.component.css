@@ -1,0 +1,12 @@
+.remove-item {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color:#f78181;
+  border: 1px solid;
+  font-weight: bold;
+  padding: 0px 0.25rem;
+  font-size: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
