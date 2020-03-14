@@ -8,7 +8,7 @@ import { HelperService } from './helper.service';
 })
 export class BlockchainService {
   private deviceId: string;
-  private baseUrl = 'http://62.138.18.239:8000/api';
+  private baseUrl = 'http://localhost:8000/api';
 
   constructor(
     private http: HttpClient,
