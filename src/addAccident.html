@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Create Campaigns</title>
+    <title>Digikis</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
@@ -21,7 +21,7 @@
 
 <div class="container-contact100">
     <div class="wrap-contact100">
-        <a href="manageBallots.html">
+        <a href="index.html">
             <button class="btn btn-success">
 				<span>
 					<i class="fa fa-long-arrow-left m-l-7" aria-hidden="true"></i>
@@ -32,29 +32,25 @@
 			<span class="contact100-form-title">
 					Accident Detection
 				</span>
-            <div class="wrap-input100 validate-input bg1" data-validate="Please Type ID">
-                <span class="label-input100">ID *</span>
-                <input class="input-ID" type="text" name="ID" placeholder="Campaign ID" readonly>
-            </div>
 
             <div class="wrap-input100 bg1 rs1-wrap-input100">
                 <span class="label-input100">Device ID *</span>
-                <input class="input100" type="text" name="Name" placeholder="Device ID">
+                <input class="input100" type="text" name="deviceID" placeholder="Device ID">
             </div>
 
             <div class="wrap-input100 bg1 rs1-wrap-input100">
                 <span class="label-input100">Muscle Sensor *</span>
-                <input class="input100" type="text" name="Name" placeholder="Muscle Sensor">
+                <input class="input100" type="text" name="muscle" placeholder="Muscle Sensor">
             </div>
 
             <div class="wrap-input100 validate-input bg1" data-validate="Campaign Title">
                 <span class="label-input100">Accelerometer *</span>
-                <input class="input100" type="text" name="Name" placeholder="Accelerometer">
+                <input class="input100" type="text" name="accelerometer" placeholder="Accelerometer">
             </div>
 
             <div class="wrap-input100 validate-input bg1">
                 <span class="label-input100">Pulse Sensor</span>
-                <input class="input100" type="text" name="Name" placeholder="Pulse Sensor">
+                <input class="input100" type="text" name="pulse" placeholder="Pulse Sensor">
             </div>
 
             <div class="container-contact100-form-btn">
@@ -89,61 +85,23 @@
 <script>if (window.module) module = window.module;</script>
 <script>
 
-    let ballot = '';
-    let items = '';
-    $(document).ready(function () {
-        var ts = Math.floor(new Date() / 1000)
-        var ID = (ts + (Math.floor(Math.random() * 1000) + 1)).toString();
-        $('.input-ID').val(ID);
-
+    $(document).on('click', '#submit', function (evt) {
+        let deviceID = $("input[type=text][name=deviceID]").val();
+        let Muscle = $("input[type=text][name=muscle]").val();
+        let Accelerometer = $("input[type=text][name=accelerometer]").val();
+        let pulse = $("input[type=text][name=pulse]").val();
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:3000/api/queryballots',
+            url: 'http://localhost:8000/devices/receivedata?action=addAccident&deviceid=' + deviceID + '&muscle=' + Muscle + '&accelerometer=' + Accelerometer + '&pulse=' + pulse + '',
             cache: false,
             complete: function (data, status) {
                 if (status === "success") {
-                    for (let i = 0; i < data.responseJSON.length; i++) {
-                        let ballot = data.responseJSON[i].Record.createdAt;
-                        items += "<option value='" + data.responseJSON[i].Record.ballotID + "'>" + ballot.slice(0, 10) + "</option>";
-                    }
+                    alert('Accident Data stored Successfully');
                 } else {
                     alert('Error Occured. Check Node logs.');
                 }
-                $("#ballot").append(items);
             }
         });
-    });
-
-    $("#ballot").on('change', function () {
-        ballot = $('option:selected', this).text();
-    });
-
-    $(document).on('click', '#submit', function (evt) {
-        if (ballot === '' || ballot === 'Select Ballot') {
-            alert("Select Ballot");
-        } else if (document.getElementById('type').value === 'Select Campaign Type') {
-            alert("Select Campaign Type")
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:3000/api/addCampaign",
-                data: {
-                    "campaignID": $("input[type=text][name=ID]").val(),
-                    "title": $("input[type=text][name=Name]").val(),
-                    "ballotDate": ballot,
-                    "campaignType": document.getElementById('type').value,
-                    "description": $("textarea[name=description]").val()
-                },
-                cache: false,
-                complete: function (data, status) {
-                    if (status === 'error' || !data.responseText) {
-                        alert(data.responseText);
-                    } else {
-                        alert("Campaign Added");
-                    }
-                }
-            });
-        }
     });
 
 </script>
