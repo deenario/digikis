@@ -105,7 +105,7 @@ type Air struct {
 	Oxides      string `json:"oxides"`
 	Temperature string `json:"temperature"`
 	Humidity    string `json:"humidity"`
-	timestamp   time.time `json:"timestamp"`
+	timestamp   time.Time `json:"timestamp"`
 }
 
 type Parking struct {
@@ -115,7 +115,7 @@ type Parking struct {
  	Place           string `json:"place"`
  	FreeSlot        string `json:"freeSlot"`
  	OccupiedSlot    string `json:"occupiedSlot"`
-    timestamp   time.time `json:"timestamp"`
+    timestamp   time.Time `json:"timestamp"`
  }
 
  type Accident struct {
@@ -125,7 +125,7 @@ type Parking struct {
   	Muscle          string `json:"muscle"`
   	Accelerometer   string `json:"accelerometer"`
   	Pulse           string `json:"pulse"`
-  	timestamp   time.time `json:"timestamp"`
+  	timestamp   time.Time `json:"timestamp"`
   }
 
 func (t *SmartContract) Init(stub shim.ChaincodeStubInterface) peer.Response {
