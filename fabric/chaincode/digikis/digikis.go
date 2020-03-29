@@ -94,6 +94,40 @@ type Alarm struct {
 	_Type      string `json:"_type"`
 }
 
+type Air struct {
+	ObjectType  string `json:"Type"`
+	ID          string `json:"id"`
+	DeviceID    string `json:"deviceID"`
+	CO          string `json:"co"`
+	Ozone       string `json:"ozone"`
+	LPG         string `json:"lpg"`
+	Smoke       string `json:"smoke"`
+	Oxides      string `json:"oxides"`
+	Temperature string `json:"temperature"`
+	Humidity    string `json:"humidity"`
+	timestamp   time.time `json:"timestamp"`
+}
+
+type Parking struct {
+ 	ObjectType      string `json:"Type"`
+ 	ID              string `json:"id"`
+ 	DeviceID        string `json:"deviceID"`
+ 	Place           string `json:"place"`
+ 	FreeSlot        string `json:"freeSlot"`
+ 	OccupiedSlot    string `json:"occupiedSlot"`
+    timestamp   time.time `json:"timestamp"`
+ }
+
+ type Accident struct {
+  	ObjectType      string `json:"Type"`
+  	ID              string `json:"id"`
+  	DeviceID        string `json:"deviceID"`
+  	Muscle          string `json:"muscle"`
+  	Accelerometer   string `json:"accelerometer"`
+  	Pulse           string `json:"pulse"`
+  	timestamp   time.time `json:"timestamp"`
+  }
+
 func (t *SmartContract) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 	fmt.Println("Init Firing!")
@@ -139,13 +173,222 @@ func (t *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	if function == "addAlarm" {
 		return t.addAlarm(stub, args)
 	}
-	// if function == "queryBloodpressure" {
-	// 	return t.queryBloodpressure(stub,args)
-	// }
+
+
+// 	NEW FUNCTIONS
+	if function == "addAir" {
+    	return t.addAlarm(stub, args)
+    }
+    if function == "addParking" {
+    	return t.addAlarm(stub, args)
+    }
+    if function == "addAccident" {
+       return t.addAlarm(stub, args)
+    }
+	if function == "queryAir" {
+    	return t.addAlarm(stub, args)
+    }
+    if function == "queryParking" {
+    	return t.addAlarm(stub, args)
+    }
+    if function == "queryAccident" {
+       return t.addAlarm(stub, args)
+    }
+//  End FUNCTIONS
 
 	fmt.Println("Invoke did not find specified function " + function)
 	return shim.Error("Invoke did not find specified function " + function)
 }
+
+func (s *SmartContract) queryAir(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+	deviceID := args[0]
+	queryString := fmt.Sprintf("{\"selector\":{\"Type\":\"air\",\"deviceID\":\"%s\"}}", deviceID)
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+
+func (s *SmartContract) queryParking(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	deviceID := args[0]
+	queryString := fmt.Sprintf("{\"selector\":{\"Type\":\"parking\",\"deviceID\":\"%s\"}}", deviceID)
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+
+func (s *SmartContract) queryAccident(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	deviceID := args[0]
+	queryString := fmt.Sprintf("{\"selector\":{\"Type\":\"accident\",\"deviceID\":\"%s\"}}", deviceID)
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+
+func (t *SmartContract) addParking(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	var err error
+
+	if len(args) != 6 {
+		return shim.Error("Incorrect Number of Aruments. Expecting 6")
+	}
+
+	id := args[0]
+	deviceID := args[1]
+    place := args[2]
+ 	freeSlot := args[3]
+ 	occupiedSlot := args[4]
+	timestamp, err1 := time.Parse(time.RFC3339, args[5])
+	if err1 != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======Check if id Already exists
+	dataAsBytes, err := stub.GetState(id)
+	if err != nil {
+		return shim.Error("Transaction Failed with Error: " + err.Error())
+	} else if dataAsBytes != nil {
+		return shim.Error("The Inserted ID already Exists: " + id)
+	}
+
+	// ===== Create Object and Marshal to JSON
+	objectType := "parking"
+	data := &Parking{objectType, id, deviceID, place, freeSlot, occupiedSlot, timestamp}
+	dataJSONasBytes, err := json.Marshal(data)
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Save to State
+	err = stub.PutState(id, dataJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Return Success
+	fmt.Println("Successfully Saved Data")
+	return shim.Success(nil)
+}
+
+func (t *SmartContract) addAccident(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	var err error
+
+	if len(args) != 9 {
+		return shim.Error("Incorrect Number of Aruments. Expecting 9")
+	}
+
+	id := args[0]
+	deviceID := args[1]
+    muscle := args[2]
+  	accelerometer := args[3]
+  	pulse := args[4]
+	timestamp, err1 := time.Parse(time.RFC3339, args[5])
+	if err1 != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======Check if id Already exists
+	dataAsBytes, err := stub.GetState(id)
+	if err != nil {
+		return shim.Error("Transaction Failed with Error: " + err.Error())
+	} else if dataAsBytes != nil {
+		return shim.Error("The Inserted ID already Exists: " + id)
+	}
+
+	// ===== Create Object and Marshal to JSON
+	objectType := "accident"
+	data := &Accident{objectType, id, deviceID, muscle, accelerometer, pulse, timestamp}
+	dataJSONasBytes, err := json.Marshal(data)
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Save to State
+	err = stub.PutState(id, dataJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Return Success
+	fmt.Println("Successfully Saved Data")
+	return shim.Success(nil)
+}
+
+func (t *SmartContract) addAir(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	var err error
+
+	if len(args) != 10 {
+		return shim.Error("Incorrect Number of Aruments. Expecting 10")
+	}
+
+	id := args[0]
+	deviceID := args[1]
+    co := args[2]
+	ozone := args[3]
+	lpg := args[4]
+	smoke := args[5]
+	oxides := args[6]
+	temperature := args[7]
+	humidity := args[8]
+	timestamp, err1 := time.Parse(time.RFC3339, args[9])
+	if err1 != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======Check if id Already exists
+	dataAsBytes, err := stub.GetState(id)
+	if err != nil {
+		return shim.Error("Transaction Failed with Error: " + err.Error())
+	} else if dataAsBytes != nil {
+		return shim.Error("The Inserted ID already Exists: " + id)
+	}
+
+	// ===== Create Object and Marshal to JSON
+	objectType := "air"
+	data := &Air{objectType, id, deviceID,co, ozone, lpg, smoke, oxides, temperature, humidity, timestamp}
+	dataJSONasBytes, err := json.Marshal(data)
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Save to State
+	err = stub.PutState(id, dataJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ======= Return Success
+	fmt.Println("Successfully Saved Data")
+	return shim.Success(nil)
+}
+
 
 func (t *SmartContract) addBootdevice(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 

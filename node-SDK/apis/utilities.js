@@ -3,18 +3,17 @@ const invoke = require('../blockchain/invokeNetwork');
 const query = require('../blockchain/queryNetwork');
 
 module.exports = {
-    submitlocation: async function(request) {
+    submitlocation: async function (request) {
         let _response = {};
         let response = await invoke.invokeCreate(request);
         if (response) {
             console.log(response);
-            if(response.status == 200){
+            if (response.status == 200) {
                 _response = {
                     status: response.status,
                     result: "1"
                 };
-            }
-            else{
+            } else {
                 _response = {
                     status: response.status,
                     result: "0"
@@ -24,18 +23,17 @@ module.exports = {
         return _response;
     },
 
-    police: async function(request) {
+    police: async function (request) {
         let _response = {};
         let response = await invoke.invokeCreate(request);
         if (response) {
             console.log(response);
-            if(response.status == 200){
+            if (response.status == 200) {
                 _response = {
                     status: response.status,
                     result: "2"
                 };
-            }
-            else{
+            } else {
                 _response = {
                     status: response.status,
                     result: "0"
@@ -44,19 +42,18 @@ module.exports = {
         }
         return _response;
     },
-    
-    synctime: async function(request) {
+
+    synctime: async function (request) {
         let _response = {};
         let response = await invoke.invokeCreate(request);
         if (response) {
             console.log(response);
-            if(response.status == 200){
+            if (response.status === 200) {
                 _response = {
                     status: response.status,
                     result: request.args[2]
                 };
-            }
-            else{
+            } else {
                 _response = {
                     status: response.status,
                     result: "0"
@@ -64,5 +61,5 @@ module.exports = {
             }
         }
         return _response;
-    }    
-}
+    }
+};

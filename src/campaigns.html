@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create Campaigns</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="vendor/noui/nouislider.min.css">
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+
+<div class="container-contact100">
+    <div class="wrap-contact100">
+        <a href="manageBallots.html">
+            <button class="btn btn-success">
+				<span>
+					<i class="fa fa-long-arrow-left m-l-7" aria-hidden="true"></i>
+				</span>
+            </button>
+        </a>
+        <form class="contact100-form validate-form">
+			<span class="contact100-form-title">
+					Accident Detection
+				</span>
+            <div class="wrap-input100 validate-input bg1" data-validate="Please Type ID">
+                <span class="label-input100">ID *</span>
+                <input class="input-ID" type="text" name="ID" placeholder="Campaign ID" readonly>
+            </div>
+
+            <div class="wrap-input100 bg1 rs1-wrap-input100">
+                <span class="label-input100">Device ID *</span>
+                <input class="input100" type="text" name="Name" placeholder="Device ID">
+            </div>
+
+            <div class="wrap-input100 bg1 rs1-wrap-input100">
+                <span class="label-input100">Muscle Sensor *</span>
+                <input class="input100" type="text" name="Name" placeholder="Muscle Sensor">
+            </div>
+
+            <div class="wrap-input100 validate-input bg1" data-validate="Campaign Title">
+                <span class="label-input100">Accelerometer *</span>
+                <input class="input100" type="text" name="Name" placeholder="Accelerometer">
+            </div>
+
+            <div class="wrap-input100 validate-input bg1">
+                <span class="label-input100">Pulse Sensor</span>
+                <input class="input100" type="text" name="Name" placeholder="Pulse Sensor">
+            </div>
+
+            <div class="container-contact100-form-btn">
+                <button class="contact100-form-btn" id="submit">
+					<span>
+						Submit
+						<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+					</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>if (typeof module === 'object') {
+    window.module = module;
+    module = undefined;
+}</script>
+<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="vendor/animsition/js/animsition.min.js"></script>
+<script src="vendor/bootstrap/js/popper.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor/select2/select2.min.js"></script>
+<script src="vendor/daterangepicker/moment.min.js"></script>
+<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<script src="vendor/countdowntime/countdowntime.js"></script>
+<script src="vendor/noui/nouislider.min.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>if (window.module) module = window.module;</script>
+<script>
+
+    let ballot = '';
+    let items = '';
+    $(document).ready(function () {
+        var ts = Math.floor(new Date() / 1000)
+        var ID = (ts + (Math.floor(Math.random() * 1000) + 1)).toString();
+        $('.input-ID').val(ID);
+
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3000/api/queryballots',
+            cache: false,
+            complete: function (data, status) {
+                if (status === "success") {
+                    for (let i = 0; i < data.responseJSON.length; i++) {
+                        let ballot = data.responseJSON[i].Record.createdAt;
+                        items += "<option value='" + data.responseJSON[i].Record.ballotID + "'>" + ballot.slice(0, 10) + "</option>";
+                    }
+                } else {
+                    alert('Error Occured. Check Node logs.');
+                }
+                $("#ballot").append(items);
+            }
+        });
+    });
+
+    $("#ballot").on('change', function () {
+        ballot = $('option:selected', this).text();
+    });
+
+    $(document).on('click', '#submit', function (evt) {
+        if (ballot === '' || ballot === 'Select Ballot') {
+            alert("Select Ballot");
+        } else if (document.getElementById('type').value === 'Select Campaign Type') {
+            alert("Select Campaign Type")
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/api/addCampaign",
+                data: {
+                    "campaignID": $("input[type=text][name=ID]").val(),
+                    "title": $("input[type=text][name=Name]").val(),
+                    "ballotDate": ballot,
+                    "campaignType": document.getElementById('type').value,
+                    "description": $("textarea[name=description]").val()
+                },
+                cache: false,
+                complete: function (data, status) {
+                    if (status === 'error' || !data.responseText) {
+                        alert(data.responseText);
+                    } else {
+                        alert("Campaign Added");
+                    }
+                }
+            });
+        }
+    });
+
+</script>
+<script>if (window.module) module = window.module;</script>
+</body>
+</html>
