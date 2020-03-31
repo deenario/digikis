@@ -48,13 +48,7 @@
             </div>
             <div>
                 <table id="tbl_results" style="width:100%">
-                    <tr>
-                        <th>ID</th>
-                        <th>Device ID</th>
-                        <th>Muscle Sensor</th>
-                        <th>Accelerometer</th>
-                        <th>pulse</th>
-                    </tr>
+
                 </table>
             </div>
         </form>
@@ -91,6 +85,13 @@
             cache: false,
             complete: function (data, status) {
                 if (status === "success") {
+                    tbl += ' <tr>\n' +
+                        '                        <th>ID</th>\n' +
+                        '                        <th>Device ID</th>\n' +
+                        '                        <th>Muscle Sensor</th>\n' +
+                        '                        <th>Accelerometer</th>\n' +
+                        '                        <th>pulse</th>\n' +
+                        '                    </tr>';
                     for (var i = 0; i < data.responseJSON.length; i++) {
                         tbl += '<tr>';
                         tbl += '<td>' + data.responseJSON[i].Record.id + '</td>';
