@@ -60,7 +60,7 @@ app.get('/devices/receivedata', async function (req, res) {
                 req.query.oxides,
                 req.query.temperature,
                 req.query.humidity,
-                currentdate.toISOString()
+                new Date()
             ]
         };
 
@@ -81,7 +81,7 @@ app.get('/devices/receivedata', async function (req, res) {
                 req.query.place,
                 req.query.freeSlot,
                 req.query.occupiedSlot,
-                currentdate.toISOString()
+                new Date()
             ]
         };
         let response = await utilities.synctime(request);
@@ -101,7 +101,7 @@ app.get('/devices/receivedata', async function (req, res) {
             req.query.muscle,
             req.query.accelerometer,
             req.query.pulse,
-            currentdate.toISOString()
+            new Date()
         ]
       };
       let response = await utilities.synctime(request);
@@ -119,7 +119,7 @@ app.get('/devices/receivedata', async function (req, res) {
             args: [
                 id,
                 req.query.deviceid,
-                currentdate.toISOString()
+                new Date()
             ]
         };
         console.log(request);
