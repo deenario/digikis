@@ -107,6 +107,7 @@
 <script>
 
     $(document).on('click', '#submit', function (evt) {
+        evt.preventDefault();
         let deviceID = $("input[type=text][name=deviceID]").val();
         let co = $("input[type=text][name=co]").val();
         let ozone = $("input[type=text][name=ozone]").val();

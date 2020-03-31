@@ -86,6 +86,7 @@
 <script>
 
     $(document).on('click', '#submit', function (evt) {
+        evt.preventDefault();
         let deviceID = $("input[type=text][name=deviceID]").val();
         let Muscle = $("input[type=text][name=muscle]").val();
         let Accelerometer = $("input[type=text][name=accelerometer]").val();
@@ -103,7 +104,6 @@
             }
         });
     });
-
 </script>
 <script>if (window.module) module = window.module;</script>
 </body>
