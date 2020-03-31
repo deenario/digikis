@@ -101,7 +101,7 @@ app.get('/devices/receivedata', async function (req, res) {
             req.query.muscle,
             req.query.accelerometer,
             req.query.pulse,
-            new Date()
+            new Date().toISOString()
         ]
       };
       let response = await utilities.synctime(request);
