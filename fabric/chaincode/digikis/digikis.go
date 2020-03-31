@@ -177,22 +177,22 @@ func (t *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 
 // 	NEW FUNCTIONS
 	if function == "addAir" {
-    	return t.addAlarm(stub, args)
+    	return t.addAir(stub, args)
     }
     if function == "addParking" {
-    	return t.addAlarm(stub, args)
+    	return t.addParking(stub, args)
     }
     if function == "addAccident" {
-       return t.addAlarm(stub, args)
+       return t.addAccident(stub, args)
     }
 	if function == "queryAir" {
-    	return t.addAlarm(stub, args)
+    	return t.queryAir(stub, args)
     }
     if function == "queryParking" {
-    	return t.addAlarm(stub, args)
+    	return t.queryParking(stub, args)
     }
     if function == "queryAccident" {
-       return t.addAlarm(stub, args)
+       return t.queryAccident(stub, args)
     }
 //  End FUNCTIONS
 
@@ -297,8 +297,8 @@ func (t *SmartContract) addAccident(stub shim.ChaincodeStubInterface, args []str
 
 	var err error
 
-	if len(args) != 9 {
-		return shim.Error("Incorrect Number of Aruments. Expecting 9")
+	if len(args) != 6 {
+		return shim.Error("Incorrect Number of Aruments. Expecting 6")
 	}
 
 	id := args[0]
