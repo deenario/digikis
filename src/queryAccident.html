@@ -46,6 +46,17 @@
 					</span>
                 </button>
             </div>
+            <div>
+                <table id="tbl_results" style="width:100%">
+                    <tr>
+                        <th>ID</th>
+                        <th>Device ID</th>
+                        <th>Muscle Sensor</th>
+                        <th>Accelerometer</th>
+                        <th>pulse</th>
+                    </tr>
+                </table>
+            </div>
         </form>
     </div>
 </div>
@@ -73,13 +84,23 @@
     $(document).on('click', '#submit', function (evt) {
         evt.preventDefault();
         let deviceID = $("input[type=text][name=deviceID]").val();
+        let tbl = null;
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8000/api/queryaccident?deviceid=' + deviceID + '',
             cache: false,
             complete: function (data, status) {
                 if (status === "success") {
-                    alert(data);
+                    for (var i = 0; i < data.responseJSON.length; i++) {
+                        tbl += '<tr>';
+                        tbl += '<td>' + data.responseJSON[i].Record.id + '</td>';
+                        tbl += '<td>' + data.responseJSON[i].Record.deviceID + '</td>';
+                        tbl += '<td>' + data.responseJSON[i].Record.muscle + '</td>';
+                        tbl += '<td>' + data.responseJSON[i].Record.accelerometer + '</td>';
+                        tbl += '<td>' + data.responseJSON[i].Record.pulse + '</td>';
+                        tbl += '</tr>';
+                    }
+                    $('#tbl_results').append(tbl);
                 } else {
                     alert('Error Occured. Check Node logs.');
                 }
